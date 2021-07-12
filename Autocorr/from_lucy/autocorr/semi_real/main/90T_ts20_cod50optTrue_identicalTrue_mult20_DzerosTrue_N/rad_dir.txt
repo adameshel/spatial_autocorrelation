@@ -1,0 +1,1 @@
+/home/adameshel/Documents/code/autocorr/radar_autocorr_snaps/90T_ts20_cod50_mult20_DzerosTrue

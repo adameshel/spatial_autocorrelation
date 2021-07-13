@@ -12,7 +12,7 @@ import shutil
 from autocorr_functions import *
 
 my_path = Path('/home/adameshel/Documents/code/autocorr/'+\
-    'with_gamma_big_True_specific/')
+    'with_gamma_big_True_specific1/')
 try:
     os.makedirs(my_path)
 except:
@@ -182,8 +182,8 @@ def alpha_beta_gamma(hs, Rr_mat, Ls, printing=False):
 thetas = np.linspace(-np.pi/2+eps, np.pi/2-eps, 19)
 phis = np.linspace(-np.pi/2+eps, np.pi/2-eps, 19)
 Ls = np.linspace(0.1,26,13)
-set_of_alphas = np.array([5.0, 16.471])#np.linspace(5.0,70,18)
-set_of_betas = np.array([7.0,8.5])#np.linspace(1.0,10,7)
+set_of_alphas = np.array([24.118, 39.412, 47.059, 66.176])#np.linspace(5.0,70,18)
+set_of_betas = np.array([2.5])#np.linspace(1.0,10,7)
 # set_of_alphas = np.arange(22.0,27.0,1.1)
 # set_of_betas = np.arange(22.0,27.0,1.1)
 hs = np.linspace(0.01,70.0,80)

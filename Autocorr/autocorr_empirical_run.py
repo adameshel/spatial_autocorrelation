@@ -1,18 +1,19 @@
 import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
-
+## 
 agg_times = ['30T']
 identical_l = True
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
 mult = 20 # simply for making the rain stronger
-ts = 14#120#22#3*17 #timestamp
-cod = 60 #cutoff distance (km)
+ts = 49#11 14 26 49#120#22#3*17 #timestamp
+cod = 110 #cutoff distance (km)
 opt = True
 bandwidth = 1.0 # km
 links_density = 0.03 # km**-2 # original=0.012   0.05
+save_cml = True
 discard_zeros = False ## Discard zeros from cmls not yet working
 l_dist = 'U' # E- exponent, U- uniform, N- none
 if identical_l == True: 
@@ -66,10 +67,11 @@ current = str(str(agg_times[0]) + '_ts' +\
                 str(discard_zeros) +\
                 '_'+ str(l_dist))
 dir_path_current = dir_path.joinpath(current)
-if os.path.exists(dir_path_current):
-    print('Replacing exsisting directory')
-    shutil.rmtree(dir_path_current)
-os.makedirs(dir_path_current)
+if save_cml==True:
+    if os.path.exists(dir_path_current):
+        print('Replacing exsisting directory')
+        shutil.rmtree(dir_path_current)
+    os.makedirs(dir_path_current)
 
 rad_current = str(str(agg_times[0]) + '_ts' +\
                 str(ts) + '_cod' + str(int(cod)) +\
@@ -186,11 +188,12 @@ for il, l in enumerate(cml_lengths):
     length_name = round(l,1)
     length_name = split_at(str(format(length_name/100, '.3f')),'.',1)[-1]
     globals()['ac_par_il_' + length_name] = np.array([999,999,999])
-    with open(dir_path_current.joinpath(
-        'ac_par_il_' + length_name + '.pkl'
-        ), 'wb') as f:
-        pkl.dump(globals()['ac_par_il_' + length_name], f)
-    f.close()
+    if save_cml==True:
+        with open(dir_path_current.joinpath(
+            'ac_par_il_' + length_name + '.pkl'
+            ), 'wb') as f:
+            pkl.dump(globals()['ac_par_il_' + length_name], f)
+        f.close()
 
 for ic, c in enumerate(cml_cent_sim):
     print('ITERATION %i' %ic)
@@ -360,30 +363,31 @@ for ic, c in enumerate(cml_cent_sim):
         print('\n\n')
         length_name = round(l,1)
         length_name = split_at(str(format(length_name/100, '.3f')),'.',1)[-1]
-        if ac.alpha_L * ac.beta_L <= 0:
-            with open(dir_path_current.joinpath(
-                      'ac_par_il_' + length_name + '.pkl'), 
-                      'rb') as f:
-                arr = pkl.load(f)
-            f.close()
-            arr = np.row_stack((arr,np.array([666,666])))
-            with open(dir_path_current.joinpath(
-                      'ac_par_il_' + length_name + '.pkl'), 
-                      'wb') as f:
-                pkl.dump(arr, f)
-            f.close()
-        else:
-            with open(dir_path_current.joinpath(
-                      'ac_par_il_' + length_name + '.pkl'), 
-                      'rb') as f:
-                arr = pkl.load(f)
-            f.close()
-            arr = np.row_stack((arr,np.array( [ac.alpha_L, ac.beta_L, ac.gamma_L] )))
-            with open(dir_path_current.joinpath(
-                      'ac_par_il_' + length_name + '.pkl'), 
-                      'wb') as f:
-                pkl.dump(arr, f)
-            f.close()
+        if save_cml==True:
+            if ac.alpha_L * ac.beta_L <= 0:
+                with open(dir_path_current.joinpath(
+                        'ac_par_il_' + length_name + '.pkl'), 
+                        'rb') as f:
+                    arr = pkl.load(f)
+                f.close()
+                arr = np.row_stack((arr,np.array([666,666])))
+                with open(dir_path_current.joinpath(
+                        'ac_par_il_' + length_name + '.pkl'), 
+                        'wb') as f:
+                    pkl.dump(arr, f)
+                f.close()
+            else:
+                with open(dir_path_current.joinpath(
+                        'ac_par_il_' + length_name + '.pkl'), 
+                        'rb') as f:
+                    arr = pkl.load(f)
+                f.close()
+                arr = np.row_stack((arr,np.array( [ac.alpha_L, ac.beta_L, ac.gamma_L] )))
+                with open(dir_path_current.joinpath(
+                        'ac_par_il_' + length_name + '.pkl'), 
+                        'wb') as f:
+                    pkl.dump(arr, f)
+                f.close()
 ###########################################
 ###########################################
 ## Save the respective radar dir path in the current directory

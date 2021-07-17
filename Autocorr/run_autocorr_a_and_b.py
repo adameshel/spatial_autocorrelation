@@ -12,7 +12,7 @@ import shutil
 from autocorr_functions import *
 
 my_path = Path('/home/adameshel/Documents/code/autocorr/'+\
-    'with_gamma_big_True_specific1/')
+    'with_gamma_big_True_specific/')
 try:
     os.makedirs(my_path)
 except:
@@ -95,10 +95,9 @@ def compute_acf(hs,L,pic=0,printing=False):
 #     return a*x + alpha_0/x
 #     return alpha_0*np.exp(x/(a*alpha_0))
 def alpha_L(x,a,alpha_0):
-#     return (a**c2)*x + alpha_0
-#     return (a**(c2))*x + alpha_0
-#     return alpha_0*np.exp(a*x)
-    return a*x[0]*(x[1]) + alpha_0
+    '''x is a (2,N) array with L and gamma_L'''
+    return alpha_0 + a*x[0]**(1+(a*x[1]))
+#     return a*x[0]*(x[1]) + alpha_0
 
 def beta_L(x,b,beta_0):
     return beta_0*np.exp(-x/(b*alpha_0))
@@ -109,7 +108,9 @@ def gamma_L(x,c1,c2):
     return c1*x**c2 + 1
 
 def alpha_L_inv(x,a,alpha,bias=0):
-    alpha_0 = alpha - a*x - bias
+    '''x is a (2,N) array with L and gamma_L'''
+    alpha_0 = alpha - a*x[0]**(1+(a*x[1]))
+#     alpha_0 = alpha - a*x[0]*(x[1]) - bias
     return alpha_0
 
 def beta_L_inv(x,b,beta,alpha_0):
@@ -182,8 +183,8 @@ def alpha_beta_gamma(hs, Rr_mat, Ls, printing=False):
 thetas = np.linspace(-np.pi/2+eps, np.pi/2-eps, 19)
 phis = np.linspace(-np.pi/2+eps, np.pi/2-eps, 19)
 Ls = np.linspace(0.1,26,13)
-set_of_alphas = np.array([24.118, 39.412, 47.059, 66.176])#np.linspace(5.0,70,18)
-set_of_betas = np.array([2.5])#np.linspace(1.0,10,7)
+set_of_alphas = np.array([5.0, 16.471, 24.118, 39.412, 47.059, 70.0])#np.linspace(5.0,70,18)
+set_of_betas = np.array([2.5, 7.0,8.5])#np.linspace(1.0,10,7)
 # set_of_alphas = np.arange(22.0,27.0,1.1)
 # set_of_betas = np.arange(22.0,27.0,1.1)
 hs = np.linspace(0.01,70.0,80)

@@ -2,14 +2,14 @@ import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
 
-agg_times = ['5T']
-identical_l = False
+agg_times = ['30T']
+identical_l = True
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
 mult = 20 # simply for making the rain stronger
-ts = 360#120#22#3*17 #timestamp
-cod = 50 #cutoff distance (km)
+ts = 14#120#22#3*17 #timestamp
+cod = 60 #cutoff distance (km)
 opt = True
 bandwidth = 1.0 # km
 links_density = 0.03 # km**-2 # original=0.012   0.05

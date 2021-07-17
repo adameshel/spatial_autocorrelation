@@ -96,8 +96,8 @@ def compute_acf(hs,L,pic=0,printing=False):
 #     return alpha_0*np.exp(x/(a*alpha_0))
 def alpha_L(x,a,alpha_0):
     '''x is a (2,N) array with L and gamma_L'''
-    return alpha_0 + a*x[0]**(1+(a*x[1]))
-#     return a*x[0]*(x[1]) + alpha_0
+    # return alpha_0 + a*x[0]**(1+(a*x[1]))
+    return a*x[0]*(x[1]) + alpha_0
 
 def beta_L(x,b,beta_0):
     return beta_0*np.exp(-x/(b*alpha_0))
@@ -109,8 +109,8 @@ def gamma_L(x,c1,c2):
 
 def alpha_L_inv(x,a,alpha,bias=0):
     '''x is a (2,N) array with L and gamma_L'''
-    alpha_0 = alpha - a*x[0]**(1+(a*x[1]))
-#     alpha_0 = alpha - a*x[0]*(x[1]) - bias
+    # alpha_0 = alpha - a*x[0]**(1+(a*x[1]))
+    alpha_0 = alpha - a*x[0]*(x[1]) - bias
     return alpha_0
 
 def beta_L_inv(x,b,beta,alpha_0):

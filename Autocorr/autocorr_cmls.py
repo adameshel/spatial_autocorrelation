@@ -17,7 +17,10 @@ from autocorr_functions import *
 
 class Autocorr():
     def __init__(self, df, bw, cutoff_distance_km=90.0):
-        """bw - bandwidth in km"""
+        """
+        Add desription of df columns.
+        bw - bandwidth in km.
+        """
         bw = bw * 1e3 # convert to meters
         cutoff_distance_km = cutoff_distance_km * 1e3 # convert to meters
         if 'L' in df:
@@ -43,8 +46,6 @@ class Autocorr():
         #     for row in range(len(p_prep[:,0])):
         #         num_of_rg_in_row = 1
         #         p_prep[row,2] = p_prep[row,2]
-
-
 
         for row in range(len(p_prep[:,0])):
             num_of_rg_in_row = len(p_prep[row,0])
@@ -110,33 +111,20 @@ class Autocorr():
         else:
             self.nugget = np.min(self.ac[1])
 
-        # ihc = np.sum(self.ac[1] >= np.nanmax(self.ac[1]) * 0.05) -1
-        # self.nugget = np.nanmedian(self.ac[1][ihc:])
-        # self.ac[1]
-
-        # self.nugget = np.min(self.ac[1])
         if optimize==True:
             self.magnitude_beta = 10 ** (int(np.log10(np.var(self.ac[1]))))
             self.magnitude_alpha = 10 ** (int(np.log10(np.nanmean(self.hs))))
             self.ac[0] = self.ac[0] / self.magnitude_alpha
             self.ac[1] = self.ac[1] / self.magnitude_beta
             self.nugget = self.nugget / self.magnitude_beta
-            # import pdb; pdb.set_trace()
-            # popt, _ = curve_fit(
-            #     f=acf_original_gamma, 
-            #     xdata=self.ac[0],
-            #     ydata=self.ac[1]-self.nugget
-            # )
-            ############################
             try:
                 popt, _ = curve_fit(
-                    f=acf_original_gamma, 
+                    f=acf_original, 
                     xdata=self.ac[0], 
                     ydata=self.ac[1]-self.nugget,
                     p0=[1,1,1],
                     bounds=[0,(1e4,np.inf,7)]
                 )
-            ############################
                 self.alpha_L, self.beta_L, self.gamma_L = popt
                 self.alpha_L  = self.alpha_L * self.magnitude_alpha
                 self.beta_L = self.beta_L * self.magnitude_beta

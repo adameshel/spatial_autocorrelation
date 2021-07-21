@@ -6,20 +6,25 @@ Created on Tue Jun 7 12:33:17 2021
 @author: adameshel
 '''
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.spatial.distance import pdist, squareform
 from scipy.optimize import curve_fit
-import sys
-import math
 from autocorr_functions import *
 
 class Autocorr():
     def __init__(self, df, bw, cutoff_distance_km=90.0):
         """
-        Add desription of df columns.
-        bw - bandwidth in km.
+        df columns should be (at least)-
+        Link_num, L, x, y, z
+        Link_num: the CML's unique serial number
+        L: Length of CML in km
+        x: (tuple) The x coordinate (UTM) of the measurement point on CML[i].
+        y: (tuple) The y coordinate (UTM) of the measurement point on CML[i].
+        z: (tuple) The rain intensity of the measurement point on CML[i].
+
+        bw - Bandwidth in km.
+        cutoff_distance_km- The maximal distance between measurement points accounted for.
         """
         bw = bw * 1e3 # convert to meters
         cutoff_distance_km = cutoff_distance_km * 1e3 # convert to meters
@@ -102,7 +107,7 @@ class Autocorr():
         
         optimize=True: scipy optimize acf_original to data.
         optimize=False: beta_L is the max value and alpha_L is the 
-        value of h at which the function lost 95%.
+        value of h at which the function lost 95% (not recommended).
         '''
         ## Choose the nugget before optimizing
         if len(self.hs) > 15:

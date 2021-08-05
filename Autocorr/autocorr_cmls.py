@@ -95,7 +95,6 @@ class Autocorr():
                     np.min([np.max([xMax-xMin,yMax-yMin]), 
                     cutoff_distance_km]), 
                     bw*2.0)
-        min_dist = [0,0]
         p = self.df_p[['x','y','z']].values
         self.ac = self._AC( p, self.hs, bw )
 

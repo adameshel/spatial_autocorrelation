@@ -96,6 +96,7 @@ class Autocorr():
                     cutoff_distance_km]), 
                     bw*2.0)
         p = self.df_p[['x','y','z']].values
+        self.distances = squareform( pdist( p[:,:2] ) )
         self.ac = self._AC( p, self.hs, bw )
 
 
@@ -153,12 +154,11 @@ class Autocorr():
         '''
         Experimental autocorrelation function for a single lag
         '''
-        p_d = squareform( pdist( P[:,:2] ) )
-        N = p_d.shape[0]
+        N = self.distances.shape[0]
         Z = list()
         for i in range(N):
             for j in range(i,N):
-                if( p_d[i,j] >= h-bw )and( p_d[i,j] <= h+bw ):
+                if( self.distances[i,j] >= h-bw )and( self.distances[i,j] <= h+bw ):
                     Z.append( ( P[i,2] * P[j,2] ) )
         if len(Z)==0:
             return -1
@@ -173,6 +173,3 @@ class Autocorr():
             ac.append( self._ACh( P, h, bw ) )
         ac = [ [ hs[i], ac[i] ] for i in range( len( hs ) ) if ac[i] != -1 ]
         return np.array( ac ).T
-
-
-# asdfasdfasdf         

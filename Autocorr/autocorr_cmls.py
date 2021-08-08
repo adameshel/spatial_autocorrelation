@@ -15,16 +15,16 @@ from autocorr_functions import *
 class Autocorr():
     def __init__(self, df, bw, cutoff_distance_km=90.0):
         """
-        df columns should be (at least)-
-        Link_num, L, x, y, z
-        Link_num: the CML's unique serial number
-        L: Length of CML in km
-        x: (tuple) The x coordinate (UTM) of the measurement point on CML[i].
-        y: (tuple) The y coordinate (UTM) of the measurement point on CML[i].
-        z: (tuple) The rain intensity of the measurement point on CML[i].
+        df columns can be -
+            Link_num, L, x, y, z
+            Link_num: the CML's unique serial number
+            L: Length of CML in km
+            x: (tuple) The x coordinate (UTM) of the measurement point on CML[i]
+            y: (tuple) The y coordinate (UTM) of the measurement point on CML[i]
+            z: (tuple) The rain intensity of the measurement point on CML[i]
 
         bw - Bandwidth in km.
-        cutoff_distance_km- The maximal distance between measurement points accounted for.
+        cutoff_distance_km - The maximal distance between measurement points accounted for.
         """
         bw = bw * 1e3 # convert to meters
         cutoff_distance_km = cutoff_distance_km * 1e3 # convert to meters

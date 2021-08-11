@@ -2,14 +2,15 @@ import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
 ## 
-agg_times = ['30T']
+agg_times = ['60T']
 identical_l = True
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
-mult = 20 # simply for making the rain stronger
-ts = 49#11 14 26 49#120#22#3*17 #timestamp
-cod = 110 #cutoff distance (km)
+mult = 1 # simply for making the rain stronger
+ts = 29#11 14 26 49#120#22#3*17 #timestamp
+cod = 120 #cutoff distance (km)
+aggregation_mean = False
 opt = True
 bandwidth = 1.0 # km
 links_density = 0.03 # km**-2 # original=0.012   0.05
@@ -251,24 +252,30 @@ for ic, c in enumerate(cml_cent_sim):
         links_xb = (links_lengths/2)*np.cos(ang) + links_cent[:,0] 
         links_yb = (links_lengths/2)*np.sin(ang) + links_cent[:,1]
 
-        lons_a, lats_a = transform(proj_meters, 
-                                 proj_degrees, 
-                                 links_xa, 
-                                 links_ya)
-        lons_b, lats_b = transform(proj_meters, 
-                                 proj_degrees, 
-                                 links_xb, 
-                                 links_yb)
+        lons_a, lats_a = transform(
+            proj_meters, 
+            proj_degrees, 
+            links_xa, 
+            links_ya
+            )
+        lons_b, lats_b = transform(
+            proj_meters, 
+            proj_degrees, 
+            links_xb, 
+            links_yb
+            )
 
-        df_sim_input = pd.DataFrame(columns= ['cml_id',
-                                              'site_a_longitude',
-                                              'site_b_longitude',
-                                              'site_a_latitude',
-                                              'site_b_latitude',
-                                              'Frequency',
-                                              'Length',
-                                              'Polarization',
-                                              'a','b','time','R_radolan','A'])
+        df_sim_input = pd.DataFrame(
+            columns= ['cml_id',
+                'site_a_longitude',
+                'site_b_longitude',
+                'site_a_latitude',
+                'site_b_latitude',
+                'Frequency',
+                'Length',
+                'Polarization',
+                'a','b','time','R_radolan','A']
+            )
 
         df_sim_input['cml_id'] = cml_ids
 
@@ -285,14 +292,16 @@ for ic, c in enumerate(cml_cent_sim):
                                  links_yb)
         df_sim_input['Polarization'] = np.random.choice(
             ['H', 'V', 'V'], 
-            df_sim_input.shape[0])
+            df_sim_input.shape[0]
+            )
         df_sim_input['Length'] = links_lengths / 1e3 # km
 
         for i, cml in df_sim_input.iterrows():
             df_sim_input.loc[i,'a'], df_sim_input.loc[i,'b'] = \
                 pycml.processing.A_R_relation.A_R_relation.a_b(
                     cml['Frequency'],
-                    cml['Polarization'])
+                    cml['Polarization']
+                    )
 
         df_sim_input.drop(['time'],axis='columns',inplace=True)
         # df_sim_input = df_sim_input.drop_vars('time')
@@ -325,10 +334,14 @@ for ic, c in enumerate(cml_cent_sim):
             #     nothing = 0
             print(str("ds_radolan_GT_" + agg))
             num_of_mins = float(split_at(agg,'T',1)[0])
-
-            globals()["ds_radolan_GT_" + agg] = ds_radolan_GT.resample(
-                time=agg, label='right', 
-                restore_coord_dims=False).mean(dim='time')
+            if aggregation_mean == True:
+                globals()["ds_radolan_GT_" + agg] = ds_radolan_GT.resample(
+                    time=agg, label='right', 
+                    restore_coord_dims=False).mean(dim='time')
+            else:
+                globals()["ds_radolan_GT_" + agg] = ds_radolan_GT.resample(
+                    time=agg, label='right', 
+                    restore_coord_dims=False).sum(dim='time')
             list_of_GT_datasets.append(str("ds_radolan_GT_" + agg))
 
             path_ave_time = np.zeros(
@@ -438,6 +451,7 @@ if analyze_radar == True:
         df = pd.DataFrame({'x': gridx,
                         'y': gridy,
                         'z': data})
+        print(dir_path_current)
         ac = accml.Autocorr(df, bw=bandwidth, cutoff_distance_km=cod)
         ac(optimize=opt)
         print(ac.alpha_L,ac.beta_L, ac.gamma_L)
@@ -478,5 +492,5 @@ if analyze_radar == True:
         # f.close()
 else:
     print('Radar autocorr has already been calcualted.')
-print(dir_path_current)
+    print(dir_path_current)
 

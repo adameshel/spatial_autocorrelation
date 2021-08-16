@@ -19,13 +19,29 @@ class Autocorr():
             Link_num, L, x, y, z
             Link_num: the CML's unique serial number
             L: Length of CML in km
-            x: (tuple) The x coordinate (UTM) of the measurement point on CML[i]
-            y: (tuple) The y coordinate (UTM) of the measurement point on CML[i]
-            z: (tuple) The rain intensity of the measurement point on CML[i]
+            x: (tuple) Necessary. The x coordinate (UTM) of the measurement point on CML[i]
+            y: (tuple) Necessary. The y coordinate (UTM) of the measurement point on CML[i]
+            z: (tuple) Necessary. The rain intensity of the measurement point on CML[i]
+        
+        To convert your X,Y,Z arrays to the correct form use:
+ 
+        def make_tuple_arr(arr):
+            d_tuple = []
+            for _,d in enumerate(arr):
+                d_tuple.append(tuple((d,)))
+            return d_tuple
+
+        z = make_tuple_arr(Z); x = make_tuple_arr(X); y = make_tuple_arr(Y)
+        df = pd.DataFrame(
+            {'x':x,
+            'y':y,
+            'z':z}
+        )
 
         bw - Bandwidth in km.
         cutoff_distance_km - The maximal distance between measurement points accounted for.
         """
+
         bw = bw * 1e3 # convert to meters
         cutoff_distance_km = cutoff_distance_km * 1e3 # convert to meters
         if 'L' in df:

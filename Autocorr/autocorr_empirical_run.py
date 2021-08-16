@@ -1,14 +1,14 @@
 import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
-## 
-agg_times = ['60T']
-identical_l = True
+##
+agg_times = ['180T']
+identical_l = False
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
 mult = 1 # simply for making the rain stronger
-ts = 29#11 14 26 49#120#22#3*17 #timestamp
+ts = 9#2,8,9,11 14 26 49#120#22#3*17 #timestamp
 cod = 120 #cutoff distance (km)
 aggregation_mean = False
 opt = True

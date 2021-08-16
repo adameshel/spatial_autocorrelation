@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.integrate import quad, nquad, dblquad
+from scipy.stats.stats import tiecorrect, ttest_ind_from_stats
 
 def acf_original(h, alpha, beta, gamma=1.0):
     return beta * np.exp(-(h/alpha)**gamma)
@@ -135,12 +136,27 @@ def bias(x, b):
     '''bias term in linear fit'''
     return x + b
 
-def combine_legend_subplots(i,xy=(2.8,1.02),fs=12,location='best'):
+def combine_legend_subplots(i,xy=(2.8,1.02),fs=12,location='best',ncol=1, ax=None, title=None):
     '''
     fs : font size
+    ttl: title for legend
     '''
-    handles, labels = ax[i].get_legend_handles_labels()
-    labels, ids = np.unique(labels, return_index=True)
-    handles = [handles[i] for i in ids]
-    lgd = ax[i].legend(handles, labels, loc=location, bbox_to_anchor=xy, fontsize=fs)
+    if type(i) is tuple:
+        handles, labels = ax[i[0],i[1]].get_legend_handles_labels()
+        labels, ids = np.unique(labels, return_index=True)
+        handles = [handles[i] for i in ids]
+        lgd = ax[i[0],i[1]].legend(handles, labels, loc=location, 
+        bbox_to_anchor=xy, fontsize=fs, ncol=ncol, title=title)
+    elif i!=0:
+        handles, labels = ax[i].get_legend_handles_labels()
+        labels, ids = np.unique(labels, return_index=True)
+        handles = [handles[i] for i in ids]
+        lgd = ax[i].legend(handles, labels, loc=location, 
+        bbox_to_anchor=xy, fontsize=fs, ncol=ncol, title=title)
+    else:
+        handles, labels = ax.get_legend_handles_labels()
+        labels, ids = np.unique(labels, return_index=True)
+        handles = [handles[i] for i in ids]
+        lgd = ax.legend(handles, labels, loc=location, 
+        bbox_to_anchor=xy, fontsize=fs, ncol=ncol, title=title)        
     return lgd

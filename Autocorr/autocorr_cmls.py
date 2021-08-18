@@ -30,14 +30,12 @@ class Autocorr():
             for _,d in enumerate(arr):
                 d_tuple.append(tuple((d,)))
             return d_tuple
-
         z = make_tuple_arr(Z); x = make_tuple_arr(X); y = make_tuple_arr(Y)
         df = pd.DataFrame(
             {'x':x,
             'y':y,
             'z':z}
         )
-
         bw - Bandwidth in km.
         cutoff_distance_km - The maximal distance between measurement points accounted for.
         """

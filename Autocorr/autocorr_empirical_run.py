@@ -2,19 +2,19 @@ import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
 ##
-agg_times = ['180T']
-identical_l = False
+agg_times = ['90T']
+ts = 3#2,8,9,11 14 26 49#120#22#3*17 #timestamp
+identical_l = True
+save_cml = True
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
 mult = 1 # simply for making the rain stronger
-ts = 9#2,8,9,11 14 26 49#120#22#3*17 #timestamp
 cod = 120 #cutoff distance (km)
 aggregation_mean = False
 opt = True
 bandwidth = 1.0 # km
 links_density = 0.03 # km**-2 # original=0.012   0.05
-save_cml = True
 discard_zeros = False ## Discard zeros from cmls not yet working
 l_dist = 'U' # E- exponent, U- uniform, N- none
 if identical_l == True: 
@@ -83,6 +83,7 @@ rad_path_parent = Path(
     '/home/adameshel/Documents/code/autocorr/' +\
         'radar_autocorr_snaps/with_gamma/'
     )
+
 rad_paths = glob.glob(str(rad_path_parent.absolute()) + '/*/')
 rad_path_current =  rad_path_parent.joinpath(rad_current)
 if str(rad_path_current) + '/' not in rad_paths:
@@ -403,10 +404,11 @@ for ic, c in enumerate(cml_cent_sim):
                 f.close()
 ###########################################
 ###########################################
-## Save the respective radar dir path in the current directory
-f = open(dir_path_current.joinpath('rad_dir.txt'), "w+")
-f.write(str(rad_path_current))# + "\r\n")
-f.close()
+if save_cml == True:
+    ## Save the respective radar dir path in the current directory
+    f = open(dir_path_current.joinpath('rad_dir.txt'), "w+")
+    f.write(str(rad_path_current))# + "\r\n")
+    f.close()
 
 if analyze_radar == True:
     for _, agg in enumerate(agg_times):

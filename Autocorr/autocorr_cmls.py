@@ -172,18 +172,16 @@ class Autocorr():
         '''
         Experimental autocorrelation function for a single lag
         '''
-        N = self.distances.shape[0]
         Z = list()
-        for i in range(N):
-            my_array = self.distances[i,:]#.copy()
-            my_array = np.where(my_array >= h-bw,my_array,np.nan)
-            ncnt = np.sum(np.isnan(my_array,dtype=bool))
-            my_array = np.where(my_array <= h+bw,my_array,np.nan)
-            my_array = _exclude_nans(my_array)
-            for j in range(ncnt,len(my_array)+ncnt):
-                Z.append( ( P[i,2] * P[j,2] ) )
-                    
-        if len(Z)==0:
+        for i in range( self.distances.shape[0] ):
+            sub = self.distances[i,:]#.copy()
+            sub = np.where( sub >= h-bw,sub,np.nan )
+            ncnt = np.sum( np.isnan(sub,dtype=bool) )
+            sub = np.where( sub <= h+bw,sub,np.nan )
+            sub = _exclude_nans( sub )
+            Z.append( P[i,2] * P[ncnt:len(sub)+ncnt,2] )
+        Z = np.concatenate( Z )
+        if len( Z )==0:
             return -1
         return np.sum( Z ) / ( len( Z ) )
     

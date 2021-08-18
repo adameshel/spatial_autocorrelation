@@ -163,6 +163,10 @@ class Autocorr():
             self.alpha_L = \
                 self.hs[np.sum((self.ac[1] - self.nugget) >= \
                     (np.nanmax(self.ac[1] - self.nugget) * 0.05)) -1]
+    
+    def _exclude_nans(arr):
+        bool_data = ~np.isnan(arr,dtype=bool)
+        return np.compress(bool_data,arr)
         
     def _ACh( self, P, h, bw ):
         '''
@@ -171,9 +175,14 @@ class Autocorr():
         N = self.distances.shape[0]
         Z = list()
         for i in range(N):
-            for j in range(i,N):
-                if( self.distances[i,j] >= h-bw )and( self.distances[i,j] <= h+bw ):
-                    Z.append( ( P[i,2] * P[j,2] ) )
+            my_array = self.distances[i,:]#.copy()
+            my_array = np.where(my_array >= h-bw,my_array,np.nan)
+            ncnt = np.sum(np.isnan(my_array,dtype=bool))
+            my_array = np.where(my_array <= h+bw,my_array,np.nan)
+            my_array = _exclude_nans(my_array)
+            for j in range(ncnt,len(my_array)+ncnt):
+                Z.append( ( P[i,2] * P[j,2] ) )
+                    
         if len(Z)==0:
             return -1
         return np.sum( Z ) / ( len( Z ) )

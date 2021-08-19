@@ -3,7 +3,7 @@ from scipy.linalg.special_matrices import leslie
 from pathlib import Path
 ##
 agg_times = ['160T']
-ts = 2#2,8,9,11 14 26 49#120#22#3*17 #timestamp
+ts = 5#2,8,9,11 14 26 49#120#22#3*17 #timestamp
 identical_l = False
 save_cml = False
 overwrite_rad = True # overwrite radar if empty dir 
@@ -110,8 +110,8 @@ end_time_idx = -1#70#340#len(ds_radolan_cut.time)
 ############################
 ####### CHANGE DOMAIN ######
 ## Medium cut
-min_lat = 47.6890
-min_lon = 8.1873
+min_lat = 47.6890 + 1.1
+min_lon = 8.1873 + 1.3
 max_lat = 49.1185
 max_lon = 10.0978
 

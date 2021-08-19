@@ -57,7 +57,6 @@ class Autocorr():
             yMax = np.max(df.y.max())
             yMin = np.min(df.y.min())
             
-        df.dropna(inplace=True)
         p_prep = np.array( df[['x','y','z']] )
         max_num_of_rg_in_row = len(p_prep[0,2])
         ## A loop for defining the VRGs per link where the number  
@@ -177,14 +176,17 @@ class Autocorr():
         Z = list()
         for i in range( self.distances.shape[0] ):
             sub = self.distances[i,i:]
+            idxs = np.argsort(sub)
+            sub = np.sort(sub)
             sub = np.where( sub >= h-bw,sub,np.nan )
             ncnt = np.sum( np.isnan(sub,dtype=bool) )
             sub = np.where( sub <= h+bw,sub,np.nan )
             sub = excludenans( sub )
-            Z.append( P[i,2] * P[ncnt:len(sub)+ncnt,2] )
-            if i==0:
-                self.test.append(P[ncnt:len(sub)+ncnt,2])
+            Z.append( P[i,2] * P[idxs[ncnt:len(sub)+ncnt],2] )
+
+            # Z.append( P[i,2] * P[ncnt:len(sub)+ncnt,2] )
         Z = np.concatenate( Z )
+        self.test.append(np.sum(Z))
         
         if len( Z )==0:
             return -1

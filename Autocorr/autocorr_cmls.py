@@ -182,7 +182,7 @@ class Autocorr():
             sub = excludenans( sub )
             Z.append( P[i,2] * P[ncnt:len(sub)+ncnt,2] )
         Z = np.concatenate( Z )
-        self.test.append(len(Z))
+        self.test.append([np.sum(Z),len(Z)])
         if len( Z )==0:
             return -1
         return np.sum( Z ) / ( len( Z ) )

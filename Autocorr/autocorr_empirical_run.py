@@ -2,15 +2,16 @@ import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
 ##
-agg_times = ['180T']
-ts = 1#2,8,9,11 14 26 49#120#22#3*17 #timestamp
-identical_l = True
-save_cml = True
+agg_times = ['160T']
+ts = 2#2,8,9,11 14 26 49#120#22#3*17 #timestamp
+identical_l = False
+save_cml = False
+overwrite_rad = True # overwrite radar if empty dir 
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
 mult = 1 # simply for making the rain stronger
-cod = 121 #cutoff distance (km)
+cod = 120 #cutoff distance (km)
 aggregation_mean = False
 opt = True
 bandwidth = 1.0 # km
@@ -20,7 +21,7 @@ l_dist = 'U' # E- exponent, U- uniform, N- none
 if identical_l == True: 
     l_dist = 'N'
 if save_cml == False:
-    dentical_l = False
+    dentical_l = True
     num_of_ls = 1
     cml_cent_sim = range(1)
 dir_path = Path('/home/adameshel/Documents/code/autocorr/semi_real/main_with_gamma/')
@@ -95,9 +96,12 @@ if str(rad_path_current) + '/' not in rad_paths:
     os.mkdir(rad_path_current)
 else:
     if len(os.listdir(str(rad_path_current) + '/') ) == 0:
-        analyze_radar = True
-        shutil.rmtree(rad_path_current)
-        os.makedirs(rad_path_current)
+        if overwrite_rad == True:
+            analyze_radar = True
+            shutil.rmtree(rad_path_current)
+            os.makedirs(rad_path_current)
+        else:
+            analyze_radar = False
     else:
         analyze_radar = False
 

@@ -174,7 +174,7 @@ class Autocorr():
         '''
         Z = list()
         for i in range( self.distances.shape[0] ):
-            sub = self.distances[i,:]#.copy()
+            sub = self.distances[i,i:]#.copy()
             sub = np.where( sub >= h-bw,sub,np.nan )
             ncnt = np.sum( np.isnan(sub,dtype=bool) )
             sub = np.where( sub <= h+bw,sub,np.nan )

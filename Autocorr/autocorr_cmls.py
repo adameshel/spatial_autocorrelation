@@ -12,6 +12,10 @@ from scipy.spatial.distance import pdist, squareform
 from scipy.optimize import curve_fit
 from autocorr_functions import *
 
+def excludenans(arr):
+    bool_data = ~np.isnan(arr,dtype=bool)
+    return np.compress(bool_data,arr)
+
 class Autocorr():
     def __init__(self, df, bw, cutoff_distance_km=90.0):
         """
@@ -163,10 +167,6 @@ class Autocorr():
             self.alpha_L = \
                 self.hs[np.sum((self.ac[1] - self.nugget) >= \
                     (np.nanmax(self.ac[1] - self.nugget) * 0.05)) -1]
-    
-    def _exclude_nans(arr):
-        bool_data = ~np.isnan(arr,dtype=bool)
-        return np.compress(bool_data,arr)
         
     def _ACh( self, P, h, bw ):
         '''
@@ -178,7 +178,7 @@ class Autocorr():
             sub = np.where( sub >= h-bw,sub,np.nan )
             ncnt = np.sum( np.isnan(sub,dtype=bool) )
             sub = np.where( sub <= h+bw,sub,np.nan )
-            sub = _exclude_nans( sub )
+            sub = excludenans( sub )
             Z.append( P[i,2] * P[ncnt:len(sub)+ncnt,2] )
         Z = np.concatenate( Z )
         if len( Z )==0:

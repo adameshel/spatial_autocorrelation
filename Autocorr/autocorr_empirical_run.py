@@ -2,15 +2,15 @@ import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
 ##
-agg_times = ['90T']
-ts = 3#2,8,9,11 14 26 49#120#22#3*17 #timestamp
+agg_times = ['180T']
+ts = 1#2,8,9,11 14 26 49#120#22#3*17 #timestamp
 identical_l = True
 save_cml = True
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
 mult = 1 # simply for making the rain stronger
-cod = 120 #cutoff distance (km)
+cod = 121 #cutoff distance (km)
 aggregation_mean = False
 opt = True
 bandwidth = 1.0 # km
@@ -19,6 +19,10 @@ discard_zeros = False ## Discard zeros from cmls not yet working
 l_dist = 'U' # E- exponent, U- uniform, N- none
 if identical_l == True: 
     l_dist = 'N'
+if save_cml == False:
+    dentical_l = False
+    num_of_ls = 1
+    cml_cent_sim = range(1)
 dir_path = Path('/home/adameshel/Documents/code/autocorr/semi_real/main_with_gamma/')
 
 if identical_l is False:
@@ -90,7 +94,12 @@ if str(rad_path_current) + '/' not in rad_paths:
     analyze_radar = True
     os.mkdir(rad_path_current)
 else:
-    analyze_radar = False
+    if len(os.listdir(str(rad_path_current) + '/') ) == 0:
+        analyze_radar = True
+        shutil.rmtree(rad_path_current)
+        os.makedirs(rad_path_current)
+    else:
+        analyze_radar = False
 
 start_time_idx = 0#15
 end_time_idx = -1#70#340#len(ds_radolan_cut.time)

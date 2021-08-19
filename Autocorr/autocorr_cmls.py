@@ -115,7 +115,6 @@ class Autocorr():
                     bw*2.0)
         p = self.df_p[['x','y','z']].values
         self.distances = squareform( pdist( p[:,:2] ) )
-        self.test = list()
         self.ac = self._AC( p, self.hs, bw )
 
 
@@ -176,17 +175,14 @@ class Autocorr():
         Z = list()
         for i in range( self.distances.shape[0] ):
             sub = self.distances[i,i:]
-            idxs = np.argsort(sub)
+            idxs = np.argsort(sub) + i
             sub = np.sort(sub)
             sub = np.where( sub >= h-bw,sub,np.nan )
             ncnt = np.sum( np.isnan(sub,dtype=bool) )
             sub = np.where( sub <= h+bw,sub,np.nan )
             sub = excludenans( sub )
             Z.append( P[i,2] * P[idxs[ncnt:len(sub)+ncnt],2] )
-
-            # Z.append( P[i,2] * P[ncnt:len(sub)+ncnt,2] )
         Z = np.concatenate( Z )
-        self.test.append(np.sum(Z))
         
         if len( Z )==0:
             return -1

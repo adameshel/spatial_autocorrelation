@@ -505,7 +505,6 @@ if analyze_radar == True:
         #     for var in dat:
         #         pkl.dump(var, f)
         # f.close()
-        print(ac.test)
 else:
     print('Radar autocorr has already been calcualted.')
     print(dir_path_current)

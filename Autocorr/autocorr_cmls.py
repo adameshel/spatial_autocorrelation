@@ -56,7 +56,8 @@ class Autocorr():
             xMin = np.min(df.x.min())
             yMax = np.max(df.y.max())
             yMin = np.min(df.y.min())
-
+            
+        df.dropna(inplace=True)
         p_prep = np.array( df[['x','y','z']] )
         max_num_of_rg_in_row = len(p_prep[0,2])
         ## A loop for defining the VRGs per link where the number  

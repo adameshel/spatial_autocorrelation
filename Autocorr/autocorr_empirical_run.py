@@ -2,11 +2,11 @@ import numpy as np
 from scipy.linalg.special_matrices import leslie
 from pathlib import Path
 ##
-agg_times = ['160T']
-ts = 5#2,8,9,11 14 26 49#120#22#3*17 #timestamp
-identical_l = False
-save_cml = False
-overwrite_rad = True # overwrite radar if empty dir 
+agg_times = ['180T']
+ts = 1#2,8,9,11 14 26 49#120#22#3*17 #timestamp
+identical_l = True
+save_cml = True
+overwrite_rad = False # overwrite radar if empty dir 
 shortest = 1.0; longest = 30.0
 num_of_ls = 20
 cml_cent_sim = range(50)
@@ -110,8 +110,8 @@ end_time_idx = -1#70#340#len(ds_radolan_cut.time)
 ############################
 ####### CHANGE DOMAIN ######
 ## Medium cut
-min_lat = 47.6890 + 1.1
-min_lon = 8.1873 + 1.3
+min_lat = 47.6890
+min_lon = 8.1873 
 max_lat = 49.1185
 max_lon = 10.0978
 

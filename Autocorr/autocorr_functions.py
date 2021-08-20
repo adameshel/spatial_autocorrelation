@@ -4,6 +4,9 @@ from scipy.optimize import curve_fit
 from scipy.integrate import quad, nquad, dblquad
 from scipy.stats.stats import tiecorrect, ttest_ind_from_stats
 
+def acf_original_2d(x, alpha, beta, gamma):
+    return beta * np.exp(-(np.sqrt(x[0]**2 + x[1]**2) / alpha) ** gamma)
+
 def acf_original(h, alpha, beta, gamma=1.0):
     return beta * np.exp(-(h/alpha)**gamma)
 

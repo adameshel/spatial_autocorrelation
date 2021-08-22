@@ -183,14 +183,23 @@ class Autocorr():
                     self.hs[np.sum((self.ac[1] - self.nugget) >= \
                         (np.nanmax(self.ac[1] - self.nugget) * 0.05)) -1]
         else:
-            xdata = np.vstack((self.X.ravel(), self.Y.ravel()))
+            epsilon = 1e-7
+            self.magnitude_alpha = 10 ** (round(np.log10(np.nanmean(abs(self.X.ravel())))))
+            xdata = np.vstack(
+                (self.X.ravel() / self.magnitude_alpha, 
+                self.Y.ravel() / self.magnitude_alpha)
+                )
             self.pars, pcov = curve_fit(
                 f=acf_original_2d,
                 xdata=xdata,
                 ydata=self.s.ravel(),
-                p0=[10*self.res,1,1]
+                p0=[1*self.res,1,1],
+                bounds=[(0, 0.5, 0.1), 
+                (np.inf, 1.5, 10)]
             )   
             self.std_error = np.sqrt(np.diag(pcov))
+            self.std_error[0] = self.std_error[0] * self.magnitude_alpha
+            self.pars[0] = self.pars[0] * self.magnitude_alpha
 
             self.ac_2d = np.reshape(
                 acf_original_2d(xdata, self.pars[0], self.pars[1], self.pars[2]),

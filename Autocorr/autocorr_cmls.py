@@ -19,13 +19,19 @@ def excludenans(arr):
 class Autocorr():
     def __init__(self, df, bw=1.0, cutoff_distance_km=90.0):
         """
+        df can be either a 2d array of regularly gridded data (will be processed 
+        using Wiener-Khintchine theorem) or a pd.Dataframe (processed by 
+        1/N*SUM(z_i * z_j)).
         df columns can be -
             Link_num, L, x, y, z
             Link_num: the CML's unique serial number
             L: Length of CML in km
-            x: (tuple) Necessary. The x coordinate (UTM) of the measurement point on CML[i]
-            y: (tuple) Necessary. The y coordinate (UTM) of the measurement point on CML[i]
-            z: (tuple) Necessary. The rain intensity of the measurement point on CML[i]
+            x: (tuple) Necessary. The x coordinate (UTM) of the 
+                measurement point on CML[i]
+            y: (tuple) Necessary. The y coordinate (UTM) of the 
+                measurement point on CML[i]
+            z: (tuple) Necessary. The rain intensity of the 
+                measurement point on CML[i]
         
         To convert your X,Y,Z arrays to the correct form use:
  

@@ -5,9 +5,9 @@ import pickle as pkl
 dir_path = Path('/home/adameshel/Documents/code/autocorr/semi_real/main_with_gamma/')
 with open(str(dir_path.joinpath('d_run.pkl')), 'rb') as f:
     d = pkl.load(f)
-agg = '15T'
+agg = '180T'
 time_stamps = d[agg][0]
-identical_l = True
+identical_l = False
 
 save_cml = True
 overwrite_cml = True
@@ -145,7 +145,7 @@ y1 = ds_radolan_GT.y_utm.values[km_in_start:km_in_end]
 ################################
 ################################
 for tsi, ts in enumerate(time_stamps):
-    cod = int(d[agg][1][tsi][0] * 5)##cutoff distance (km)
+    cod = int(d[agg][1][tsi][0] * 6)##cutoff distance (km)
     current = str(str(agg) + '_ts' +\
                     str(ts) + '_cod' + str(int(cod)) +\
                     'opt' + str(opt) + '_identical' +\
@@ -307,8 +307,8 @@ for tsi, ts in enumerate(time_stamps):
             NOISE = 'with'
 
             print(str("ds_radolan_GT_" + agg))
-            pcnt = int(tsi/len(time_stamps)*100)
-            print('%i percent of ts are done' %pcnt)
+            pcnt = int((tsi+1)/len(time_stamps)*100)
+            print('%ith percent of ts are being processed' %pcnt)
             print('identical_l=' + str(identical_l))
             if aggregation_mean == True:
                 globals()["ds_radolan_GT_" + agg] = ds_radolan_GT.resample(

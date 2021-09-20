@@ -101,5 +101,5 @@ for at, agg in enumerate(agg_times):
                     d_run[agg] = [l_ts,l_pars,l_pars_err,l_r2]
         except:
             pass
-with open(str(my_path.joinpath('d_run.pkl')), 'wb') as f:
+with open(str(my_path.joinpath('d_runTEST.pkl')), 'wb') as f:
     pkl.dump(d_run, f)

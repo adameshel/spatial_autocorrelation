@@ -137,7 +137,7 @@ class Autocorr():
             self.WKT = True # Wiener-Khintchine theorem
 
 
-    def __call__(self, optimize=True):
+    def __call__(self, optimize=True, beta_to_one=False):
         '''
         Choose method by which you wish to find  the exponential and 
         multiplication parameters- alpha_L and beta_L.
@@ -145,6 +145,9 @@ class Autocorr():
         optimize=True: scipy optimize acf_original to data.
         optimize=False: beta_L is the max value and alpha_L is the 
         value of h at which the function lost 95% (not recommended).
+
+        beta_to_one: (bool) Used only when df is a regularly gridded 2d array. 
+        beta is not optimized and set to 1.
         '''
         if self.WKT == False:
             ## Choose the nugget before optimizing
@@ -189,7 +192,10 @@ class Autocorr():
                     self.hs[np.sum((self.ac[1] - self.nugget) >= \
                         (np.nanmax(self.ac[1] - self.nugget) * 0.05)) -1]
         else:
-            epsilon = 1e-7
+            if beta_to_one==True:
+                epsilon = 1e-7
+            else:
+                epsilon = 0.5
             self.magnitude_alpha = 10 ** (round(np.log10(np.nanmean(abs(self.X.ravel())))))
             xdata = np.vstack(
                 (self.X.ravel() / self.magnitude_alpha, 
@@ -200,8 +206,8 @@ class Autocorr():
                 xdata=xdata,
                 ydata=self.s.ravel(),
                 p0=[1*self.res,1,1],
-                bounds=[(0, 0.5, 0.1), 
-                (np.inf, 1.5, 10)]
+                bounds=[(0, 1-epsilon, 0.1), 
+                (np.inf, 1+epsilon, 10)]
             )   
             self.std_error = np.sqrt(np.diag(pcov))
             self.std_error[0] = self.std_error[0] * self.magnitude_alpha
